@@ -27,6 +27,7 @@ public class AuthController {
 
     // 🚀 Register New User or Admin
     @PostMapping("/register")
+    // ResponseEntity ek Spring object hai jo use hoti h entire HTTP response k liye
     public ResponseEntity<String> register(@RequestBody User user) { //@RequestBody automatically maps the incoming JSON to a User object
         // check kro email already toh exist n krt, krti h toh error dedo
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -49,7 +50,7 @@ public class AuthController {
         userRepository.save(user);
         // ResponseEntity is a special object provided by Spring that helps you control the entire HTTP response
         // — not just the body, but also the status code, headers
-        return ResponseEntity.ok("✅ " + user.getRole() + " registered successfully!");
+        return ResponseEntity.ok("✅ " + user.getRole() + " registered successfully! Welcome to the team");
     }
 
     // 🔐 Login and return JWT tokennnn
@@ -58,6 +59,7 @@ public class AuthController {
         System.out.println("Login request received for email: " + request.getEmail());
 
         //Optional is a Java feature that helps avoid NullPointerException.
+        // optional acts as a container
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
 
         if (!optionalUser.isPresent()) {

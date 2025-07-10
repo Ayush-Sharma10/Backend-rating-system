@@ -24,6 +24,7 @@ import java.util.Optional;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+    //ensure krta hai filter ek hi br run kre per http req
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -47,11 +48,14 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 email = jwtUtil.extractEmail(jwt);
             } catch (ExpiredJwtException | SignatureException | MalformedJwtException e) {
+                // catch krta hai agr token expired, tampered, or malformed hai toh
                 System.out.println("❌ Invalid JWT Token: " + e.getMessage());
             }
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // SecurityContextHolder.getContext()-Think of it as a container for security-related info about the current request.
+            // Authentication object, which contains details about the currently authenticated user
             Optional<User> optionalUser = userRepository.findByEmail(email);
             System.out.println("🔑 Email from token: " + email);
             System.out.println("📋 User exists in DB? " + optionalUser.isPresent());
@@ -62,22 +66,23 @@ public class JwtFilter extends OncePerRequestFilter {
                 User user = optionalUser.get();
 
                 // ✅ Add role-based authority
+                //UsernamePasswordAuthenticationToken A built-in Spring Security class that implements the Authentication interface
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
-                                user,
-                                null,
-                                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+                                user, // principal
+                                null, // credentials
+                                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))//GrantedAuthority
                         );
-
+                // request detail add krta hai jaise IP or session ID
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+                // Spring Security Context mein authentication object save karta hai, taaki user is request ke liye authenticated maana jaaye.
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
 
 
             }
         }
-
+        // pass krdo req to next filter ya controller
         filterChain.doFilter(request, response);
     }
 }

@@ -14,11 +14,11 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
 
     // ✅ Used for filtering ratings in AdminController
     @Query("SELECT r FROM Rating r WHERE " +
-            "(:ambiance IS NULL OR r.ambiance = :ambiance) AND " +
-            "(:food IS NULL OR r.food = :food) AND " +
-            "(:service IS NULL OR r.service = :service) AND " +
-            "(:cleanliness IS NULL OR r.cleanliness = :cleanliness) AND " +
-            "(:drinks IS NULL OR r.drinks = :drinks) AND " +
+            "(:ambiance IS NULL OR r.ambiance = :ambiance) OR " +
+            "(:food IS NULL OR r.food = :food) OR " +
+            "(:service IS NULL OR r.service = :service) OR " +
+            "(:cleanliness IS NULL OR r.cleanliness = :cleanliness) OR " +
+            "(:drinks IS NULL OR r.drinks = :drinks) OR " +
             "(:email IS NULL OR r.user.email = :email)")
     List<Rating> filterRatings(
             @Param("ambiance") Integer ambiance,

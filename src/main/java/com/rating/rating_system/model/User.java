@@ -1,5 +1,7 @@
 package com.rating.rating_system.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +19,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     private String role;
@@ -49,7 +52,7 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

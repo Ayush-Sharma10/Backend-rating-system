@@ -18,10 +18,10 @@ public class RatingController {
 
     @PostMapping("/rate")
     public ResponseEntity<String> submitRating(@RequestBody RatingRequest request, Authentication authentication) {
-        // ✅ Get authenticated user (injected from JWT token)
-        User user = (User) authentication.getPrincipal();
+        //Get authenticated user (injected from JWT token)
+        User user = (User) authentication.getPrincipal(); // extract kro authenticated user object ko
 
-        // ✅ Validate each rating field is between 1 and 5
+        // Validate each rating field is between 1 and 5
         if (!isValidRating(request.getAmbiance()) ||
                 !isValidRating(request.getFood()) ||
                 !isValidRating(request.getService()) ||
